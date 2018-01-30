@@ -61,9 +61,9 @@ const view = (state, actions) => {
     })
 
   const problem = [
-    span({}, state.a),
-    span({}, state.op),
-    span({}, state.b),
+    span({class: 'a'}, state.a),
+    span({class: 'op'}, state.op),
+    span({class: 'b'}, state.b),
   ]
 
   let problemAttributes = {class: 'problem'}
