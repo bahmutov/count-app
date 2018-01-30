@@ -1,0 +1,94 @@
+html {
+  line-height: 1;
+}
+
+body {
+  align-items: center;
+  background-color: #111;
+  display: flex;
+
+  font-family: Helvetica Neue, sans-serif;
+
+  height: 100vh;
+  justify-content: center;
+
+  margin: 0;
+  padding: 0;
+
+  text-align: center;
+}
+
+div.hero {
+  font-weight: 100;
+  font-size: 6em;
+  position: fixed;
+  top: 0em;
+  left: 0.5em;
+  color: #ffe100;
+}
+
+div.problem {
+  color: #00caff;
+
+  font-weight: 100;
+  font-size: 8em;
+
+  margin: 0;
+  padding-bottom: 50px;
+}
+
+div.problem.right {
+  color: #00ff2a;
+  font-weight: 300;
+  transition: color .5s;
+}
+
+button {
+  background: #111;
+  border-radius: 0px;
+  border: 1px solid #00caff;
+  color: #00caff;
+
+  font-size: 2em;
+  font-weight: 100;
+
+  margin: 5px 0;
+
+  outline: none;
+  padding: 5px 15px;
+
+  transition: background .2s;
+}
+
+button:hover {
+  background: #00caff;
+  color: #111;
+}
+
+button:disabled {
+  border: 1px solid #ff0077;
+  background: #ff00ae;
+  color: #111;
+}
+
+button + button {
+  margin-left: 3px;
+}
+
+footer {
+  font-weight: 100;
+  font-size: 6em;
+  position: fixed;
+  bottom: 0em;
+  color: #00ff73;
+  right: 1em;
+}
+
+aside.language {
+  font-weight: 100;
+  font-size: 2em;
+  position: fixed;
+  top: 0em;
+  color: #ffe100;
+  right: 1em;
+}
