@@ -25,7 +25,7 @@ div.problem {
   font-size: 8em;
 
   margin: 0;
-  padding-bottom: 15px;
+  padding-bottom: 50px;
 }
 
 button {
@@ -66,5 +66,14 @@ footer {
   position: fixed;
   bottom: 0em;
   color: #00ff73;
+  right: 1em;
+}
+
+aside.language {
+  font-weight: 100;
+  font-size: 2em;
+  position: fixed;
+  top: 0em;
+  color: #ffe100;
   right: 1em;
 }

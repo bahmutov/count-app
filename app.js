@@ -1,13 +1,17 @@
 const { h, app } = window.hyperapp
-const { div, span, button, footer } = window.html
+const { div, span, button, footer, aside } = window.html
 
 const state = {
   a: 0,
   b: 0,
   op: '+',
   correct: 0,
-  disabledAnswers: {}
+  disabledAnswers: {},
+  language: 'ру'
 }
+
+const switchLanguage = (language) =>
+  language === 'ру' ? 'en' : 'ру'
 
 const random = () => Math.floor(Math.random() * 10)
 
@@ -26,8 +30,12 @@ const actions = {
     disabledAnswers[String(answer)] = true
 
     return {disabledAnswers}
-  }
+  },
+  language: () => (state) => ({language: switchLanguage(state.language)})
 }
+
+const correctAnswers = (language, n) =>
+  language === 'ру' ? `Правильно ${n}` : `Correct ${n}`
 
 const view = (state, actions) => {
   console.log(state.disabledAnswers)
@@ -42,7 +50,6 @@ const view = (state, actions) => {
       return button(attributes, String(k))
     })
 
-  console.log('correct answers', state.correct)
   return div([
     div({class: 'problem'}, [
       span({}, state.a),
@@ -50,7 +57,11 @@ const view = (state, actions) => {
       span({}, state.b),
     ]),
     div({class: 'answers'}, answers),
-    footer({}, `Правильно ${state.correct}`)
+    footer({}, correctAnswers(state.language, state.correct)),
+    aside({
+      class: 'language',
+      onclick: actions.language
+    }, state.language)
   ])
 }
 
