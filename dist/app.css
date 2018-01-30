@@ -18,6 +18,15 @@ body {
   text-align: center;
 }
 
+div.hero {
+  font-weight: 100;
+  font-size: 6em;
+  position: fixed;
+  top: 0em;
+  left: 0.5em;
+  color: #ffe100;
+}
+
 div.problem {
   color: #00caff;
 

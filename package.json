@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "cypress run",
-    "e2e": "cypress open"
+    "e2e": "cypress open",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,7 @@
     "hyperapp": "^1.0.2"
   },
   "devDependencies": {
-    "cypress": "^1.4.1"
+    "cypress": "^1.4.1",
+    "gh-pages": "^1.1.0"
   }
 }
