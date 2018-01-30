@@ -43,19 +43,28 @@ button {
   padding: 5px 15px;
 
   transition: background .2s;
+}
 
-  &:hover, &:active, &:disabled {
-    background: #00caff;
-    color: #111;
-  }
-  &:active {
-    outline: 2px solid #00caff;
-  }
-  &:focus {
-    border: 1px solid #00caff;
-  }
+button:hover {
+  background: #00caff;
+  color: #111;
+}
+
+button:disabled {
+  border: 1px solid #ff0077;
+  background: #ff00ae;
+  color: #111;
 }
 
 button + button {
   margin-left: 3px;
+}
+
+footer {
+  font-weight: 100;
+  font-size: 6em;
+  position: fixed;
+  bottom: 0em;
+  color: #00ff73;
+  right: 1em;
 }
