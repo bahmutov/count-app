@@ -92,3 +92,23 @@ aside.language {
   color: #ffe100;
   right: 1em;
 }
+
+@media (max-width: 600px) {
+  div.hero {
+    font-size: 3em;
+  }
+
+  div.problem {
+    font-size: 4em;
+  }
+
+  footer {
+    width: 100%;
+    font-weight: 100;
+    font-size: 3em;
+    position: fixed;
+    bottom: 10px;
+    color: #00ff73;
+    right: 0;
+  }
+}

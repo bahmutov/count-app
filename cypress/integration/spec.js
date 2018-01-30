@@ -36,4 +36,9 @@ describe('Count', () => {
     cy.reload()
     cy.contains('aside.language', 'en')
   })
+
+  it('looks good on iphone', () => {
+    cy.viewport('iphone-6')
+    solveZeroPlusZero()
+  })
 })
