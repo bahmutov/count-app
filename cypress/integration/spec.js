@@ -1,6 +1,7 @@
+/// <reference types="Cypress" />
 describe('Count', () => {
   beforeEach(() => {
-    cy.visit('index.html')
+    cy.visit('dist/index.html')
   })
 
   const solveZeroPlusZero = () => {
