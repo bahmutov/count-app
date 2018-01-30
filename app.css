@@ -28,6 +28,12 @@ div.problem {
   padding-bottom: 50px;
 }
 
+div.problem.right {
+  color: #00ff2a;
+  font-weight: 300;
+  transition: color .5s;
+}
+
 button {
   background: #111;
   border-radius: 0px;

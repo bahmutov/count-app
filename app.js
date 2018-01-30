@@ -7,7 +7,8 @@ const state = {
   op: '+',
   correct: 0,
   disabledAnswers: {},
-  language: 'ру'
+  language: localStorage.getItem('language') || 'ру',
+  rightAnswer: null
 }
 
 const switchLanguage = (language) =>
@@ -16,13 +17,18 @@ const switchLanguage = (language) =>
 const random = () => Math.floor(Math.random() * 10)
 
 const actions = {
-  answer: (answer) => state => {
+  nextQuestion: () => state => ({
+    a: random(),
+    b: random(),
+    disabledAnswers: {},
+    rightAnswer: null
+  }),
+  answer: (answer) => (state, actions) => {
     if (state.a + state.b === answer) {
+      setTimeout(actions.nextQuestion, 2000)
       return {
-        a: random(),
-        b: random(),
         correct: state.correct + 1,
-        disabledAnswers: {}
+        rightAnswer: answer
       }
     }
 
@@ -31,7 +37,11 @@ const actions = {
 
     return {disabledAnswers}
   },
-  language: () => (state) => ({language: switchLanguage(state.language)})
+  language: () => (state) => {
+    language = switchLanguage(state.language)
+    localStorage.setItem('language', language)
+    return {language}
+  }
 }
 
 const correctAnswers = (language, n) =>
@@ -50,12 +60,20 @@ const view = (state, actions) => {
       return button(attributes, String(k))
     })
 
+  const problem = [
+    span({}, state.a),
+    span({}, state.op),
+    span({}, state.b),
+  ]
+
+  let problemAttributes = {class: 'problem'}
+  if (state.rightAnswer !== null) {
+    problemAttributes = {class: 'problem right'}
+    problem.push(span({}, ` = ${state.rightAnswer}`))
+  }
+
   return div([
-    div({class: 'problem'}, [
-      span({}, state.a),
-      span({}, state.op),
-      span({}, state.b),
-    ]),
+    div(problemAttributes, problem),
     div({class: 'answers'}, answers),
     footer({}, correctAnswers(state.language, state.correct)),
     aside({
