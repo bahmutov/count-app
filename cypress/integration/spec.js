@@ -1,33 +1,64 @@
 /// <reference types="Cypress" />
 describe('Count', () => {
+  let app
   beforeEach(() => {
     cy.visit('dist/index.html')
+    cy.window().its('app').then(a => {
+      app = a
+    })
   })
 
-  const showsZeroPlusZero = () => {
-    cy.contains('.a-op-b', '0+0')
+  const getState = () =>
+    cy.window().its('app').invoke('getState')
+
+  const showsTheProblem = () => {
+    getState().its('problem')
+    .then(problem => {
+      cy.contains('.problem', problem)
+    })
   }
 
-  const showsZeroPlusZeroEqualsZero = () => {
-    cy.contains('.a-op-b', '0+0')
-    cy.contains('= 0')
-    cy.get('.problem.right').should('be.visible')
+  const showsTheSolution = () => {
+    getState().its('problem')
+    .then(problem => {
+      cy.contains('.problem.right', problem)
+    })
+    cy.get('.problem.right').should('not.exist')
   }
 
-  const solveZeroPlusZero = () => {
-    showsZeroPlusZero()
-    cy.contains('.answers > button', '0').click()
-    showsZeroPlusZeroEqualsZero()
+  const solvesTheProblem = () => {
+    showsTheProblem()
+    getState().its('expectedAnswer')
+    .then(expectedAnswer => {
+      const answer = new RegExp(`^${expectedAnswer}$`)
+      cy.contains('.answers > button', answer).click()
+    })
   }
 
-  it('adds 0 + 0', () => {
+  it('has answer buttons', () => {
+    cy.get('.answers button').should('have.length', 41)
+    cy.contains('.answers button', /^0$/)
+  })
+
+  it('solves first problem', () => {
     cy.get('.problem').should('be.visible')
-    solveZeroPlusZero()
+    solvesTheProblem()
     cy.contains('footer', 'правильно 1')
+    showsTheSolution()
+  })
+
+  it('solves 3 problems', () => {
+    solvesTheProblem()
+    showsTheSolution()
+    solvesTheProblem()
+    showsTheSolution()
+    solvesTheProblem()
+    showsTheSolution()
+    cy.contains('footer', 'правильно 3')
   })
 
   it('switches to English', () => {
-    solveZeroPlusZero()
+    solvesTheProblem()
     cy.get('aside.language').click()
       .should('contain', 'en')
     cy.contains('footer', 'correct 1')
@@ -39,6 +70,7 @@ describe('Count', () => {
 
   it('looks good on iphone', () => {
     cy.viewport('iphone-6')
-    solveZeroPlusZero()
+    solvesTheProblem()
+    showsTheSolution()
   })
 })

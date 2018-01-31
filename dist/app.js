@@ -1,14 +1,33 @@
 (function () {
   const { app } = window.hyperapp
   const { div, span, button, footer, aside } = window.html
+  const _ = window._
+
+  const range = (from, to) => {
+    const a = []
+    for (let k = from; k <= to; k += 1) {
+      a.push(k)
+    }
+    return a
+  }
+
+  const problemText = (state) =>
+    `${state.a}${state.op}${state.b}`
 
   const state = {
+    // ranges of answers
+    min: -20,
+    max: 20,
+    // current problem
     a: 0,
     b: 0,
-    op: '+',
+    op: '-',
+    problem: '0-0',
+    expectedAnswer: 0,
+    // game state
     correct: 0,
     disabledAnswers: {},
-    language: localStorage.getItem('language') || 'ру',
+    language: 'ру',
     rightAnswer: null
   }
 
@@ -18,22 +37,60 @@
   const heroMessage = (language) =>
     language === 'ру' ? 'счет' : 'count'
 
-  const random = () => Math.floor(Math.random() * 10)
+  const pickAddition = (min, max) => {
+    const a = _.random(0, max)
+    const b = _.random(max - a)
+    return {a, b}
+  }
+
+  const pickSubtraction = (min, max) => {
+    const a = _.random(0, max)
+    const b = _.random(0, max)
+    return {a, b}
+  }
+
+  const pickNumbers = (op, min, max) =>
+    op === '+' ? pickAddition(min, max) : pickSubtraction(min, max)
 
   const actions = {
-    nextQuestion: () => state => ({
-      a: random(),
-      b: random(),
-      disabledAnswers: {},
-      rightAnswer: null
+    load: () => state => ({
+      language: localStorage.getItem('language') || 'ру',
+      correct: parseInt(localStorage.getItem('correct') || '0'),
     }),
+    save: () => state => {
+      localStorage.setItem('language', state.language)
+      localStorage.setItem('correct', state.correct)
+    },
+    toggleOp: () => state => ({
+      op: state.op === '+' ? '-' : '+'
+    }),
+    nextQuestion: () => state => {
+      const op = state.op
+      const {a, b} = pickNumbers(op, state.min, state.max)
+      const problem = problemText({a, b, op})
+      const expectedAnswer = eval(problem)
+      return {
+        a,
+        b,
+        problem,
+        expectedAnswer,
+        disabledAnswers: {},
+        rightAnswer: null
+      }
+    },
+    rightAnswer: (answer) => (state) => {
+      return {
+        correct: state.correct + 1,
+        rightAnswer: answer
+      }
+    },
+    getState: () => state => state,
     answer: (answer) => (state, actions) => {
-      if (state.a + state.b === answer) {
+      if (state.expectedAnswer === answer) {
         setTimeout(actions.nextQuestion, 2000)
-        return {
-          correct: state.correct + 1,
-          rightAnswer: answer
-        }
+        actions.rightAnswer(answer)
+        actions.toggleOp()
+        return actions.save()
       }
 
       const disabledAnswers = state.disabledAnswers
@@ -43,7 +100,6 @@
     },
     language: () => (state) => {
       language = switchLanguage(state.language)
-      localStorage.setItem('language', language)
       return {language}
     }
   }
@@ -52,8 +108,7 @@
     language === 'ру' ? `правильно ${n}` : `correct ${n}`
 
   const view = (state, actions) => {
-    console.log(state.disabledAnswers)
-    const answers = Array.from(Array(20)).map((x, k) => k)
+    const answers = range(state.min, state.max)
       .map(k => {
         const attributes = {}
         if (state.disabledAnswers[String(k)]) {
@@ -64,25 +119,27 @@
         return button(attributes, String(k))
       })
 
-    const problem = [span({class: 'a-op-b'}, `${state.a}${state.op}${state.b}`)]
+    const problemAttributes = state.rightAnswer === null
+      ? {class: 'problem'} : {class: 'problem right'}
 
-    let problemAttributes = {class: 'problem'}
-    if (state.rightAnswer !== null) {
-      problemAttributes = {class: 'problem right'}
-      problem.push(span({}, ` = ${state.rightAnswer}`))
-    }
+    const problem = state.rightAnswer === null
+      ? span(state.problem)
+      : span(`${state.problem} = ${state.rightAnswer}`)
 
-    return div([
+    return div({oncreate: actions.load}, [
       div({class: 'hero'}, heroMessage(state.language)),
       div(problemAttributes, problem),
       div({class: 'answers'}, answers),
-      footer({}, correctAnswers(state.language, state.correct)),
+      footer(correctAnswers(state.language, state.correct)),
       aside({
         class: 'language',
-        onclick: actions.language
+        onclick: () => {
+          actions.language()
+          actions.save()
+        }
       }, state.language)
     ])
   }
 
-  app(state, actions, view, document.getElementById('app'))
+  window.app = app(state, actions, view, document.getElementById('app'))
 }())
