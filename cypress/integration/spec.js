@@ -68,6 +68,27 @@ describe('Count', () => {
     cy.contains('aside.language', 'en')
   })
 
+  it('keeps score', () => {
+    solvesTheProblem()
+    showsTheSolution()
+    cy.reload()
+    cy.contains('footer', 'правильно 1')
+  })
+
+  it('saves in local storage', () => {
+    solvesTheProblem()
+    showsTheSolution()
+    cy.window().its('localStorage').then(ls => {
+      return {
+        correct: ls.getItem('correct'),
+        language: ls.getItem('language')
+      }
+    }).should('deep.equal', {
+      correct: '1',
+      language: 'ру'
+    })
+  })
+
   it('looks good on iphone', () => {
     cy.viewport('iphone-6')
     solvesTheProblem()
