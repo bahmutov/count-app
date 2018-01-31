@@ -26,13 +26,15 @@ describe('Count', () => {
     cy.get('.problem.right').should('not.exist')
   }
 
+  const pressButton = (caption) => {
+    const answer = new RegExp(`^${caption}$`)
+    cy.contains('.answers > button', answer).click()
+  }
+
   const solvesTheProblem = () => {
     showsTheProblem()
     getState().its('expectedAnswer')
-    .then(expectedAnswer => {
-      const answer = new RegExp(`^${expectedAnswer}$`)
-      cy.contains('.answers > button', answer).click()
-    })
+      .then(pressButton)
   }
 
   it('has answer buttons', () => {
@@ -93,5 +95,19 @@ describe('Count', () => {
     cy.viewport('iphone-6')
     solvesTheProblem()
     showsTheSolution()
+  })
+
+  it('can make wrong guesses', () => {
+    showsTheProblem()
+    getState().its('expectedAnswer')
+      .then(expectedAnswer => {
+        if (expectedAnswer === 0) {
+          pressButton(20)
+        } else {
+          pressButton(`-${expectedAnswer}`)
+        }
+      })
+    cy.get('button:disabled').should('have.length', 1)
+    cy.contains('footer', 'правильно 0')
   })
 })
