@@ -102,6 +102,10 @@ aside.language {
     font-size: 4em;
   }
 
+  button {
+    font-size: 1.5em;
+  }
+
   footer {
     width: 100%;
     font-weight: 100;
