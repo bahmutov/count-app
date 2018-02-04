@@ -27,6 +27,7 @@ describe('Count', () => {
   }
 
   const pressButton = (caption) => {
+    expect(caption).to.be.a('number')
     const answer = new RegExp(`^${caption}$`)
     cy.contains('.answers > button', answer).click()
   }
@@ -36,6 +37,18 @@ describe('Count', () => {
     getState().its('expectedAnswer')
       .then(pressButton)
   }
+
+  it('cannot get more points by clicking right answer many times', () => {
+    showsTheProblem()
+    getState().its('expectedAnswer')
+      .then(answer => {
+        pressButton(answer)
+        pressButton(answer)
+        pressButton(answer)
+      })
+    // there should be a single correct answer
+    cy.contains('footer', 'правильно 1')
+  })
 
   it('has answer buttons', () => {
     cy.get('.answers button').should('have.length', 41)
