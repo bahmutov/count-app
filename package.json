@@ -8,9 +8,10 @@
     "e2e": "cypress open",
     "deploy": "gh-pages -d dist"
   },
+  "private": true,
   "keywords": [],
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "hyperapp": "^1.0.2"
   },
