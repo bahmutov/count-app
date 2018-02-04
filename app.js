@@ -86,6 +86,12 @@
     },
     getState: () => state => state,
     answer: (answer) => (state, actions) => {
+      if (state.rightAnswer !== null) {
+        // we have already answered this question
+        // ignore multiple clicks on the same answer
+        return
+      }
+
       if (state.expectedAnswer === answer) {
         setTimeout(actions.nextQuestion, 2000)
         actions.rightAnswer(answer)
