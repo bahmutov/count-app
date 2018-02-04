@@ -41,6 +41,31 @@ describe('Count', () => {
       .then(pressButton)
   }
 
+  const setNextQuestion = ({a, op, b, problem, expectedAnswer}) => {
+    expect(a).to.be.a('number')
+    expect(op).to.be.a('string')
+    expect(b).to.be.a('number')
+    expect(problem).to.be.a('string')
+    expect(expectedAnswer).to.be.a('number')
+
+    getAppActions().its('setNextQuestion').then(setNextQuestion => {
+      setNextQuestion({
+        a,
+        op,
+        b,
+        problem,
+        expectedAnswer
+      })
+    })
+  }
+
+  const solveGivenProblem = ({a, b, op, problem, expectedAnswer}) => {
+    setNextQuestion({a, b, op, problem, expectedAnswer})
+    cy.contains('.problem', problem).should('be.visible')
+    pressButton(expectedAnswer)
+    cy.contains('footer', 'правильно 1')
+  }
+
   it('cannot get more points by clicking right answer many times', () => {
     showsTheProblem()
     getState().its('expectedAnswer')
@@ -63,17 +88,23 @@ describe('Count', () => {
   })
 
   it('solves given problem', () => {
-    getAppActions().its('setNextQuestion').then(setNextQuestion => {
-      setNextQuestion({
-        a: 2,
-        b: 10,
-        problem: '2 + 10',
-        expectedAnswer: 12
-      })
+    solveGivenProblem({
+      a: 2,
+      op: '+',
+      b: 10,
+      problem: '2 + 10',
+      expectedAnswer: 12
     })
-    cy.contains('.problem', '2 + 10').should('be.visible')
-    pressButton(12)
-    cy.contains('footer', 'правильно 1')
+  })
+
+  it('can divide by 2', () => {
+    solveGivenProblem({
+      a: 10,
+      op: '/',
+      b: 2,
+      problem: '2 / 10',
+      expectedAnswer: 5
+    })
   })
 
   it('solves first problem', () => {

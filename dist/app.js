@@ -11,6 +11,8 @@
     return a
   }
 
+  const isOdd = a => Math.abs(a % 2) === 1
+
   const problemText = (state) =>
     `${state.a}${state.op}${state.b}`
 
@@ -49,8 +51,26 @@
     return {a, b}
   }
 
-  const pickNumbers = (op, min, max) =>
-    op === '+' ? pickAddition(min, max) : pickSubtraction(min, max)
+  const pickDivision = (min, max) => {
+    let a = _.random(1, max)
+    if (isOdd(a)) {
+      a -= 1
+    }
+    return {a, b: 2}
+  }
+
+  const pickNumbers = (op, min, max) => {
+    switch (op) {
+      case '+':
+      return pickAddition(min, max)
+      case '-':
+      return pickSubtraction(min, max)
+      case '/':
+      return pickDivision(min, max)
+      default:
+      throw new Error(`Cannot pick numbers for op ${op}`)
+    }
+  }
 
   const actions = {
     load: () => state => ({
@@ -61,13 +81,23 @@
       localStorage.setItem('language', state.language)
       localStorage.setItem('correct', state.correct)
     },
-    toggleOp: () => state => ({
-      op: state.op === '+' ? '-' : '+'
-    }),
+
+    toggleOp: () => state => {
+      switch (state.op) {
+        case '+':
+        return {op: '-'}
+        case '-':
+        return {op: '/'}
+        case '/':
+        return {op: '+'}
+      }
+    },
+
     // could be done nicely with merge function
-    setNextQuestion: ({a, b, problem, expectedAnswer}) => state => ({
+    setNextQuestion: ({a, b, problem, expectedAnswer, op}) => state => ({
       a,
       b,
+      op,
       problem,
       expectedAnswer,
       disabledAnswers: {},
@@ -78,7 +108,7 @@
       const {a, b} = pickNumbers(op, state.min, state.max)
       const problem = problemText({a, b, op})
       const expectedAnswer = eval(problem)
-      return actions.setNextQuestion({a, b, problem, expectedAnswer})
+      return actions.setNextQuestion({a, op, b, problem, expectedAnswer})
     },
     rightAnswer: (answer) => (state) => {
       return {
