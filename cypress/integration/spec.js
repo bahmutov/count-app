@@ -11,6 +11,9 @@ describe('Count', () => {
   const getState = () =>
     cy.window().its('app').invoke('getState')
 
+  const getAppActions = () =>
+    cy.window().its('app')
+
   const showsTheProblem = () => {
     getState().its('problem')
     .then(problem => {
@@ -53,6 +56,24 @@ describe('Count', () => {
   it('has answer buttons', () => {
     cy.get('.answers button').should('have.length', 41)
     cy.contains('.answers button', /^0$/)
+  })
+
+  it('exposed app actions', () => {
+    getAppActions().should('be.an', 'object')
+  })
+
+  it('solves given problem', () => {
+    getAppActions().its('setNextQuestion').then(setNextQuestion => {
+      setNextQuestion({
+        a: 2,
+        b: 10,
+        problem: '2 + 10',
+        expectedAnswer: 12
+      })
+    })
+    cy.contains('.problem', '2 + 10').should('be.visible')
+    pressButton(12)
+    cy.contains('footer', 'правильно 1')
   })
 
   it('solves first problem', () => {

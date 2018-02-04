@@ -64,19 +64,21 @@
     toggleOp: () => state => ({
       op: state.op === '+' ? '-' : '+'
     }),
-    nextQuestion: () => state => {
+    // could be done nicely with merge function
+    setNextQuestion: ({a, b, problem, expectedAnswer}) => state => ({
+      a,
+      b,
+      problem,
+      expectedAnswer,
+      disabledAnswers: {},
+      rightAnswer: null
+    }),
+    nextQuestion: () => (state, actions) => {
       const op = state.op
       const {a, b} = pickNumbers(op, state.min, state.max)
       const problem = problemText({a, b, op})
       const expectedAnswer = eval(problem)
-      return {
-        a,
-        b,
-        problem,
-        expectedAnswer,
-        disabledAnswers: {},
-        rightAnswer: null
-      }
+      return actions.setNextQuestion({a, b, problem, expectedAnswer})
     },
     rightAnswer: (answer) => (state) => {
       return {
