@@ -100,6 +100,7 @@ aside.language {
 
   div.problem {
     font-size: 4em;
+    padding-bottom: 20px;
   }
 
   button {
@@ -114,5 +115,22 @@ aside.language {
     bottom: 10px;
     color: #00ff73;
     right: 0;
+  }
+
+}
+
+@media (max-height: 600px) {
+  div.hero {
+    font-size: 2em;
+  }
+  div.problem {
+    font-size: 3em;
+    padding-bottom: 0.5em;
+  }
+  footer {
+    font-size: 2em;
+  }
+  button {
+    font-size: 1em;
   }
 }
