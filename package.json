@@ -1,7 +1,7 @@
 {
   "name": "count-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple arithmetic game for children",
   "main": "index.js",
   "scripts": {
     "test": "cypress run",
@@ -9,7 +9,7 @@
     "deploy": "gh-pages -d dist"
   },
   "keywords": [],
-  "author": "",
+  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "hyperapp": "^1.0.2"
