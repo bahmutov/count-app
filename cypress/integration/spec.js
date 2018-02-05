@@ -2,7 +2,22 @@
 describe('Count', () => {
   let app
   beforeEach(() => {
-    cy.visit('dist/index.html')
+    cy.visit('dist/index.html', {
+      // let's speed tests up by making correct answer display
+      // shorter. Any time our application shows the right answer
+      // using `setTimeout(..., 2000)` we are going to
+      // do `setTimeout(..., 100)` instead
+      onBeforeLoad: win => {
+        const st = win.setTimeout
+        win.setTimeout = (fn, ms) => {
+          if (ms === 2000) {
+            return st(fn, 100)
+          } else {
+            return st(fn, ms)
+          }
+        }
+      }
+    })
     cy.window().its('app').then(a => {
       app = a
     })
