@@ -1,0 +1,7 @@
+{
+  "git.ignoreLimitWarning": true,
+  "editor.formatOnSave": true,
+  "standard.run": "onSave",
+  "standard.autoFixOnSave": true,
+  "standard.usePackageJson": true
+}
