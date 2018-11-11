@@ -1,7 +1,7 @@
 // @ts-check
 ;(function () {
   const { app } = window.hyperapp
-  const { div, span, button, footer, aside } = window.html
+  const { div, span, button, footer, aside } = window.hyperappHtml
   const _ = window._
 
   const range = (from, to) => {
